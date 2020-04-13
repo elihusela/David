@@ -10,7 +10,6 @@ import numpy as np
 import os, sys, os.path
 import pandas as pd
 import urllib
-import urllib.request
 import pickle
 import skimage
 import glob
@@ -170,7 +169,7 @@ class FilterDataset(Dataset):
     def __getitem__(self, idx):
         return self.dataset[self.idxs[idx]]
 
-def NIH_download_by_parts(part_index):
+def NIH_downloader_by_parts(part_index):
 
     image_links = ['https://nihcc.box.com/shared/static/vfk49d74nhbxq3nqjg0900w5nvkorp5c.gz',
                     'https://nihcc.box.com/shared/static/i28rlmbvmfjbl8p2n3ril0pptcmcu9d1.gz',
