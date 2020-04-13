@@ -202,7 +202,7 @@ class NIH_downloader_by_parts(object):
             print("File " + fn + " already exists")
         else:
             print('downloading', fn, '...')
-            urllib.request.urlretrieve(self.image_links[self.current_package], fn)  # download the zip file
+            # urllib.request.urlretrieve(self.image_links[self.current_package], fn)  # download the zip file
             print("Download succesful")
 
         tf = tarfile.open(fn)
