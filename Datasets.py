@@ -10,6 +10,8 @@ import numpy as np
 import os, sys, os.path
 import pandas as pd
 import pickle
+import urllib
+import urllib.request
 import skimage
 import glob
 import collections
