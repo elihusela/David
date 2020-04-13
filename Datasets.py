@@ -202,7 +202,7 @@ def NIH_download_by_parts(part_index):
     tf.extractall('/content/NIH_images/')
     tf.close()
 
-    # Remove tar
+    # Remove tar file
     if os.path.exists(fn):
         os.remove(fn)
     else:
