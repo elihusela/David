@@ -168,6 +168,51 @@ class FilterDataset(Dataset):
     def __getitem__(self, idx):
         return self.dataset[self.idxs[idx]]
 
+def NIH_download_by_parts(part_index):
+
+    image_links = ['https://nihcc.box.com/shared/static/vfk49d74nhbxq3nqjg0900w5nvkorp5c.gz',
+                    'https://nihcc.box.com/shared/static/i28rlmbvmfjbl8p2n3ril0pptcmcu9d1.gz',
+                    'https://nihcc.box.com/shared/static/f1t00wrtdk94satdfb9olcolqx20z2jp.gz',
+                    'https://nihcc.box.com/shared/static/0aowwzs5lhjrceb3qp67ahp0rd1l1etg.gz',
+                    'https://nihcc.box.com/shared/static/v5e3goj22zr6h8tzualxfsqlqaygfbsn.gz',
+                    'https://nihcc.box.com/shared/static/asi7ikud9jwnkrnkj99jnpfkjdes7l6l.gz',
+                    'https://nihcc.box.com/shared/static/jn1b4mw4n6lnh74ovmcjb8y48h8xj07n.gz',
+                    'https://nihcc.box.com/shared/static/tvpxmn7qyrgl0w8wfh9kqfjskv6nmm1j.gz',
+                    'https://nihcc.box.com/shared/static/upyy3ml7qdumlgk2rfcvlb9k6gvqq2pj.gz',
+                    'https://nihcc.box.com/shared/static/l6nilvfa9cg3s28tqv1qc1olm3gnz54p.gz',
+                    'https://nihcc.box.com/shared/static/hhq8fkdgvcari67vfhs7ppg2w6ni4jze.gz',
+                    'https://nihcc.box.com/shared/static/ioqwiy20ihqwyr8pf4c24eazhh281pbu.gz']
+
+    images = []
+
+    newpath = '/content/NIH_images'
+    if not os.path.exists(newpath):
+        os.makedirs(newpath)
+    fn = '/content/NIH_images/Images_%02d.tar.gz' % (part_index)
+
+    if os.path.isfile(fn):
+        print("File " + fn + " already exists")
+    else:
+        print('downloading', fn, '...')
+        urllib.request.urlretrieve(self.image_links[self.current_package], fn)  # download the zip file
+        print("Download succesful")
+
+    tf = tarfile.open(fn)
+
+    tf.extractall('/content/NIH_images/')
+    tf.close()
+
+    # Remove tar
+    if os.path.exists(fn):
+        os.remove(fn)
+    else:
+        print("Can not delete " + fn + " as it doesn't exist.")
+
+    # append all images into a list
+    # for filename in glob.glob('/content/NIH_images/images/*.png'):
+    #     images.append(filename)
+
+    return
 
 class NIH_Dataset(Dataset):
     """
@@ -385,3 +430,4 @@ class XRayCenterCrop(object):
 
     def __call__(self, img):
         return self.crop_center(img)
+
