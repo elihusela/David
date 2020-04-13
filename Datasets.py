@@ -202,13 +202,14 @@ def NIH_downloader_by_parts(index):
     tf = tarfile.open(fn)
 
     tf.extractall('/content/NIH_images/')
+    print("extraction finished")
     tf.close()
 
     # Remove tar file
-    if os.path.exists(fn):
-        os.remove(fn)
-    else:
-        print("Can not delete " + fn + " as it doesn't exist.")
+    # if os.path.exists(fn):
+    #     os.remove(fn)
+    # else:
+    #     print("Can not delete " + fn + " as it doesn't exist.")
 
     # append all images into a list
     # for filename in glob.glob('/content/NIH_images/images/*.png'):
