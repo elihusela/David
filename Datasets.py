@@ -9,7 +9,6 @@ from tqdm import tqdm
 import numpy as np
 import os, sys, os.path
 import pandas as pd
-import urllib
 import pickle
 import skimage
 import glob
