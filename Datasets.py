@@ -191,11 +191,11 @@ def NIH_downloader_by_parts(index):
     if not os.path.exists(newpath):
         os.makedirs(newpath)
     fn = '/content/NIH_images/Images_%02d.tar.gz' % (index)
-
+    img_path = '/content/NIH_images/images/'
     if os.path.isfile(fn):
         print("File " + fn + " already exists")
-        if (os.path.exists('/content/NIH_images/images/'))
-            return '/content/NIH_images/images/'    #return images path
+        if os.path.exists(img_path):
+            return img_path    #return images path
     else:
         print('downloading', fn, '...')
         urllib.request.urlretrieve(image_links[index], fn)  # download the zip file
@@ -217,7 +217,7 @@ def NIH_downloader_by_parts(index):
     # for filename in glob.glob('/content/NIH_images/images/*.png'):
     #     images.append(filename)
 
-    return '/content/NIH_images/images/'    #return images path
+    return img_path    #return images path
 
 
 class NIH_Dataset(Dataset):
