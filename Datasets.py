@@ -350,7 +350,6 @@ class NIH_partial_Dataset(Dataset):
         self.img_classes = df['Finding Labels'].values
         self.img_list = []
         self.txt_path = csvpath
-        self.current_package = current_package
         self.transform = transform
         self.to_tensor = transforms.ToTensor()
         self.to_pil = transforms.ToPILImage()
