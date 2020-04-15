@@ -186,41 +186,47 @@ def NIH_downloader_by_parts(index):
                    'https://nihcc.box.com/shared/static/hhq8fkdgvcari67vfhs7ppg2w6ni4jze.gz',
                    'https://nihcc.box.com/shared/static/ioqwiy20ihqwyr8pf4c24eazhh281pbu.gz']
 
-    images = []
-
-    newpath = '/content/NIH_images'
-    if not os.path.exists(newpath):
-        os.makedirs(newpath)
-    fn = '/content/NIH_images/Images_%02d.tar.gz' % (index)
     img_path = '/content/NIH_images/images/'
-    if os.path.isfile(fn):
-        print("File " + fn + " already exists")
-        # Remove tar file
-        if os.path.exists(fn):
+    fn = '/content/NIH_images/Images_%02d.tar.gz' % (index)
+
+
+    if os.path.exists(img_path): #check if images already extracted
+        print("Images already upacked.")
+        if os.path.exists(fn): # Remove tar file
             os.remove(fn)
             print(fn + " Deleted.")
         else:
             print("Can not delete " + fn + " as it doesn't exist.")
+        return img_path  # return images path
 
-        if os.path.exists(img_path):
-            print("Images already upacked.")
-            return img_path    #return images path
-    else:
+
+
+    if os.path.isfile(fn):  #check if tar file exists
+        print("File " + fn + " already exists")
+        tf = tarfile.open(fn)   #unpack
+        print("Unpacking..")
+        tf.extractall('/content/NIH_images/')
+        print("extraction finished")
+        tf.close()
+
+        os.remove(fn)
+
+        return img_path
+
+    else:   #download and unpack
+        newpath = '/content/NIH_images'
+        if not os.path.exists(newpath):
+            os.makedirs(newpath)
+
         print('downloading', fn, '...')
         urllib.request.urlretrieve(image_links[index], fn)  # download the zip file
         print("Download succesful")
 
-    tf = tarfile.open(fn)
-    print("Unpacking..")
-    tf.extractall('/content/NIH_images/')
-    print("extraction finished")
-    tf.close()
-
-
-
-    # append all images into a list
-    # for filename in glob.glob('/content/NIH_images/images/*.png'):
-    #     images.append(filename)
+        tf = tarfile.open(fn)
+        print("Unpacking..")
+        tf.extractall('/content/NIH_images/')
+        print("extraction finished")
+        tf.close()
 
     return img_path    #return images path
 
