@@ -330,7 +330,7 @@ class NIH_Dataset(Dataset):
 
 
 class NIH_partial_Dataset(Dataset):
-    def __init__(self, img_dir, csv_path='/content/David/Data_Entry_2017.csv', transform=None):
+    def __init__(self, img_dir, csvpath='/content/David/Data_Entry_2017.csv', transform=None):
         """
         Initialize data set as a list of IDs corresponding to each item of data set
 
@@ -349,7 +349,7 @@ class NIH_partial_Dataset(Dataset):
         self.img_names = df['Image Index'].values
         self.img_classes = df['Finding Labels'].values
         self.img_list = []
-        self.txt_path = csv_path
+        self.txt_path = csvpath
         self.current_package = current_package
         self.transform = transform
         self.to_tensor = transforms.ToTensor()
