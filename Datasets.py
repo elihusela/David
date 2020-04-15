@@ -194,7 +194,7 @@ def NIH_downloader_by_parts(index):
 
     if os.path.isfile(fn):
         print("File " + fn + " already exists")
-        if (path.exists('/content/NIH_images/images/'))
+        if (os.path.exists('/content/NIH_images/images/'))
             return '/content/NIH_images/images/'    #return images path
     else:
         print('downloading', fn, '...')
