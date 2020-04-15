@@ -195,6 +195,7 @@ def NIH_downloader_by_parts(index):
     if os.path.isfile(fn):
         print("File " + fn + " already exists")
         if os.path.exists(img_path):
+            print("Images already upacked.")
             return img_path    #return images path
     else:
         print('downloading', fn, '...')
@@ -202,7 +203,7 @@ def NIH_downloader_by_parts(index):
         print("Download succesful")
 
     tf = tarfile.open(fn)
-
+    print("Unpacking..")
     tf.extractall('/content/NIH_images/')
     print("extraction finished")
     tf.close()
@@ -443,7 +444,7 @@ def split_sub_dataloaders(dataset, subset_per=1,split_per=0.7, batch_size=100, n
 
     if (split_per < 1):
         sub_indices = list(range(0,int(len(dataset) * split_per)))  #list subset indices
-        dataset = torch.utils.data.Subset(dataset, indices) #generate a subset
+        dataset = torch.utils.data.Subset(dataset, sub_indices) #generate a subset
 
     #calculate and split into val and train
     val_size = int(len(dataset)*(1 - split_per))
