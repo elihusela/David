@@ -355,7 +355,7 @@ class NIH_partial_Dataset(Dataset):
         self.to_pil = transforms.ToPILImage()
 
 
-        for (dirpath, dirnames, filenames) in walk(img_dir):
+        for (dirpath, dirnames, filenames) in os.walk(img_dir):
             self.img_list.extend(filenames)
             break
 
