@@ -215,7 +215,7 @@ def NIH_downloader_by_parts(index):
     # for filename in glob.glob('/content/NIH_images/images/*.png'):
     #     images.append(filename)
 
-    return
+    return '/content/NIH_images/images/'    #return images path
 
 
 class NIH_Dataset(Dataset):
@@ -233,7 +233,7 @@ class NIH_Dataset(Dataset):
     """
 
     def __init__(self, imgpath,
-                 csvpath=os.path.join(thispath, "Data_Entry_2017.csv.gz"),
+                 csvpath=os.path.join(thispath, "Data_Entry_2017.csv"),
                  transform=None,
                  data_aug=None,
                  nrows=None,
@@ -435,3 +435,22 @@ class XRayCenterCrop(object):
     def __call__(self, img):
         return self.crop_center(img)
 
+def split_sub_dataloaders(dataset, subset_per=1,split_per=0.7, batch_size=100, num_workers=2):
+    #return a tuple - dataloaders{train : , val : } and dataset_sizes{train : , val : }
+    
+    if (split_per < 1):
+        sub_indices = list(range(0,int(len(dataset) * split_per)))  #list subset indices
+        dataset = torch.utils.data.Subset(dataset, indices) #generate a subset
+
+    #calculate and split into val and train
+    val_size = int(len(dataset)*(1 - split_per))
+    split_list = [(len(dataset) - val_size), val_size]
+    ds_train, ds_val = torch.utils.data.random_split(dataset, split_list)
+
+    ds_train = torch.utils.data.DataLoader(med_data_train_l, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+    ds_val = torch.utils.data.DataLoader(med_data_val, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+
+    dataloaders = {'train': ds_train, 'val': ds_val}
+    dataset_sizes = {'train': len(ds_train), 'val': len(ds_val)}
+
+    return (dataloaders, dataset_sizes)
