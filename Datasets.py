@@ -198,7 +198,7 @@ def NIH_downloader_by_parts(index):
         # Remove tar file
         if os.path.exists(fn):
             os.remove(fn)
-            print(fn + "Deleted.")
+            print(fn + " Deleted.")
         else:
             print("Can not delete " + fn + " as it doesn't exist.")
 
@@ -455,8 +455,8 @@ def split_sub_dataloaders(dataset, subset_per=1,split_per=0.7, batch_size=100, n
     split_list = [(len(dataset) - val_size), val_size]
     ds_train, ds_val = torch.utils.data.random_split(dataset, split_list)
 
-    ds_train = torch.utils.data.DataLoader(med_data_train_l, batch_size=batch_size, shuffle=True, num_workers=num_workers)
-    ds_val = torch.utils.data.DataLoader(med_data_val, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+    dl_train = torch.utils.data.DataLoader(ds_train, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+    dl_val = torch.utils.data.DataLoader(ds_val, batch_size=batch_size, shuffle=True, num_workers=num_workers)
 
     dataloaders = {'train': ds_train, 'val': ds_val}
     dataset_sizes = {'train': len(ds_train), 'val': len(ds_val)}
