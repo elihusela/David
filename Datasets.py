@@ -194,6 +194,7 @@ def NIH_downloader_by_parts(index):
 
     if os.path.isfile(fn):
         print("File " + fn + " already exists")
+        return
     else:
         print('downloading', fn, '...')
         urllib.request.urlretrieve(image_links[index], fn)  # download the zip file
@@ -437,7 +438,7 @@ class XRayCenterCrop(object):
 
 def split_sub_dataloaders(dataset, subset_per=1,split_per=0.7, batch_size=100, num_workers=2):
     #return a tuple - dataloaders{train : , val : } and dataset_sizes{train : , val : }
-    
+
     if (split_per < 1):
         sub_indices = list(range(0,int(len(dataset) * split_per)))  #list subset indices
         dataset = torch.utils.data.Subset(dataset, indices) #generate a subset
