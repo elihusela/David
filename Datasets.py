@@ -530,14 +530,14 @@ class XRayCenterCrop(object):
 def split_sub_dataloaders(dataset, subset_per=1,split_per=0.7, batch_size=100, num_workers=2):
     #return a tuple - dataloaders{train : , val : } and dataset_sizes{train : , val : }
 
-    if (split_per < 1):
-        sub_indices = list(range(0,int(len(dataset) * split_per)))  #list subset indices
-        dataset = torch.utils.data.Subset(dataset, sub_indices) #generate a subset
+
+    sub_indices = list(range(0,int(len(dataset) * split_per)))  #list subset indices
+    sub_dataset = torch.utils.data.Subset(dataset, sub_indices) #generate a subset
 
     #calculate and split into val and train
     val_size = int(len(dataset)*(1 - split_per))
     split_list = [(len(dataset) - val_size), val_size]
-    ds_train, ds_val = torch.utils.data.random_split(dataset, split_list)
+    ds_train, ds_val = torch.utils.data.random_split(sub_dataset, split_list)
 
     dl_train = torch.utils.data.DataLoader(ds_train, batch_size=batch_size, shuffle=True, num_workers=num_workers)
     dl_val = torch.utils.data.DataLoader(ds_val, batch_size=batch_size, shuffle=True, num_workers=num_workers)
