@@ -464,7 +464,7 @@ def split_sub_dataloaders(dataset, subset_per=1,split_per=0.7, batch_size=100, n
     return (dataloaders, dataset_sizes)
 
 
-def remove_NIH_imgaes(folder):
+def remove_NIH_images(folder):
 
     for filename in os.listdir(folder):
         file_path = os.path.join(folder, filename)
