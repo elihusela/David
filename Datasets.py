@@ -350,6 +350,7 @@ class NIH_partial_Dataset(Dataset):
         self.img_classes = df['Finding Labels'].values
         self.img_list = []
         self.txt_path = csvpath
+        self.imt_dir = img_dir
         self.transform = transform
         self.to_tensor = transforms.ToTensor()
         self.to_pil = transforms.ToPILImage()
@@ -389,7 +390,7 @@ class NIH_partial_Dataset(Dataset):
 
         :return: a sample of data as a tuple
         """
-        image = Image.open(img_dir + self.img_list[index])
+        image = Image.open(self.img_dir + self.img_list[index])
         image = self.to_tensor(image)
 
         if (image.shape[0] > 1):
