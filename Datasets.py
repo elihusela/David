@@ -48,11 +48,13 @@ default_pathologies = ['Atelectasis',
 thispath = os.path.dirname(os.path.realpath(__file__))
 
 
-def normalize(sample, maxval):
-    """Scales images to be roughly [-1024 1024]."""
-    sample = (2 * (sample.astype(np.float32) / maxval) - 1.) * 1024
-    # sample = sample / np.std(sample)
-    return sample
+def normalize(sample):
+    im_min = sample.min()
+    im_max = sample.max()
+    sub = im_max - im_min
+    res = (sample - im_min) / (sub)
+
+    return res
 
 
 def relabel_dataset(pathologies, dataset):
@@ -210,6 +212,7 @@ def NIH_downloader_by_parts(index):
         tf.close()
 
         os.remove(fn)
+        print(fn + "Deleted.")
 
         return img_path
 
@@ -227,6 +230,8 @@ def NIH_downloader_by_parts(index):
         tf.extractall('/content/NIH_images/')
         print("extraction finished")
         tf.close()
+        os.remove(fn)
+        print(fn + "Deleted.")
 
     return img_path    #return images path
 
@@ -304,7 +309,7 @@ class NIH_Dataset(Dataset):
         img_path = os.path.join(self.imgpath, imgid)
         # print(img_path)
         img = imread(img_path)
-        img = normalize(img, self.MAXVAL)
+        img = normalize(img)
 
         # Check that images are 2D arrays
         if len(img.shape) > 2:
@@ -398,7 +403,7 @@ class COVID19_Dataset(Dataset):
         img_path = os.path.join(self.imgpath, imgid)
         # print(img_path)
         img = imread(img_path)
-        img = normalize(img, self.MAXVAL)
+        img = normalize(img)
 
         # Check that images are 2D arrays
         if len(img.shape) > 2:
