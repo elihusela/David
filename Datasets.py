@@ -542,7 +542,7 @@ def split_sub_dataloaders(dataset, subset_per=1,split_per=0.7, batch_size=100, n
     dl_train = torch.utils.data.DataLoader(ds_train, batch_size=batch_size, shuffle=True, num_workers=num_workers)
     dl_val = torch.utils.data.DataLoader(ds_val, batch_size=batch_size, shuffle=True, num_workers=num_workers)
 
-    dataloaders = {'train': ds_train, 'val': ds_val}
+    dataloaders = {'train': dl_train, 'val': dl_val}
     dataset_sizes = {'train': len(ds_train), 'val': len(ds_val)}
 
     return (dataloaders, dataset_sizes)
