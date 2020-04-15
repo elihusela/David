@@ -194,7 +194,8 @@ def NIH_downloader_by_parts(index):
 
     if os.path.isfile(fn):
         print("File " + fn + " already exists")
-        return
+        if (path.exists('/content/NIH_images/images/'))
+            return '/content/NIH_images/images/'    #return images path
     else:
         print('downloading', fn, '...')
         urllib.request.urlretrieve(image_links[index], fn)  # download the zip file
