@@ -362,8 +362,6 @@ class NIH_partial_Dataset(Dataset):
 
     def get_image_class(self, name):
 
-        name = name[20:]
-
         index = np.where(self.img_names == name)[0][0]
 
         image_class_label = self.img_classes[index]
