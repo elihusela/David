@@ -329,6 +329,81 @@ class NIH_Dataset(Dataset):
         return (img, self.labels[idx])
 
 
+class NIH_partial_Dataset(Dataset):
+    def __init__(self, img_dir, txt_path='/content/David/Data_Entry_2017.csv', transform=None):
+        """
+        Initialize data set as a list of IDs corresponding to each item of data set
+
+        :param img_dir: path to image files as a uncompressed tar archive
+        :param txt_path: a text file containing names of all of images line by line
+        :param transform: apply some transforms like cropping, rotating, etc on input image
+        """
+
+        self.class_list = {'Atelectasis': 0, 'Cardiomegaly': 1, 'Effusion': 2, 'Infiltration': 3, 'Mass': 4,
+                           'Nodule': 5, 'Pneumonia': 6, 'Pneumothorax': 7, 'Consolidation': 8, 'Edema': 9,
+                           'Emphysema': 10, 'Fibrosis': 11, 'Pleural_Thickening': 12, 'Hernia': 13,
+                           'No Finding': 14}
+
+
+        df = pd.read_csv(txt_path)
+        self.img_names = df['Image Index'].values
+        self.img_classes = df['Finding Labels'].values
+        self.img_list = []
+        self.txt_path = txt_path
+        self.current_package = current_package
+        self.transform = transform
+        self.to_tensor = transforms.ToTensor()
+        self.to_pil = transforms.ToPILImage()
+
+
+        for (dirpath, dirnames, filenames) in walk(img_dir):
+            self.img_list.extend(filenames)
+            break
+
+    def get_image_class(self, name):
+
+        name = name[20:]
+
+        index = np.where(self.img_names == name)[0][0]
+
+        image_class_label = self.img_classes[index]
+
+        if '|' in image_class_label:
+            image_class_label = image_class_label.split('|')[0]
+
+        img_cl = self.class_list[image_class_label]
+        return img_cl
+
+    def __len__(self):
+        """
+        Return the length of data set using list of IDs
+
+        :return: number of samples in data set
+        """
+        return len(self.img_list)
+
+    def __getitem__(self, index):
+        """
+        Generate one item of data set.
+
+        :param index: index of item in IDs list
+
+        :return: a sample of data as a tuple
+        """
+        image = Image.open(self.img_list[index])
+        image = self.to_tensor(image)
+
+        if (image.shape[0] > 1):
+            image = image[0, :, :]
+            image = image.unsqueeze(0)
+
+        if self.transform is not None:
+            image = self.transform(image)
+
+        sample = (image, self.get_image_class(self.img_list[index]))
+
+        return sample
+
 class COVID19_Dataset(Dataset):
     """
     COVID-19 image data collection
