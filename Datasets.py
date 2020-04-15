@@ -326,7 +326,7 @@ class NIH_Dataset(Dataset):
         if self.data_aug is not None:
             img = self.data_aug(img)
 
-        return {"PA": img, "lab": self.labels[idx], "idx": idx}
+        return (img, self.labels[idx])
 
 
 class COVID19_Dataset(Dataset):
@@ -420,7 +420,7 @@ class COVID19_Dataset(Dataset):
         if self.data_aug is not None:
             img = self.data_aug(img)
 
-        return {"PA": img, "lab": self.labels[idx], "idx": idx}
+        return (img, self.labels[idx])
 
 
 class ToPILImage(object):
