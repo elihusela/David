@@ -398,7 +398,7 @@ class NIH_partial_Dataset(Dataset):
         if self.transform is not None:
             image = self.transform(image)
 
-        sample = (image, self.get_image_class(self.img_list[index]).item())
+        sample = (image, self.get_image_class(self.img_list[index]))
 
         return sample
 
