@@ -345,7 +345,7 @@ class NIH_partial_Dataset(Dataset):
                            'No Finding': 14}
 
 
-        df = pd.read_csv(txt_path)
+        df = pd.read_csv(csvpath)
         self.img_names = df['Image Index'].values
         self.img_classes = df['Finding Labels'].values
         self.img_list = []
