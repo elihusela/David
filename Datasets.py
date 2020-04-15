@@ -8,6 +8,7 @@ from torchvision import transforms
 from tqdm import tqdm
 import numpy as np
 import os, sys, os.path
+import shutil
 import pandas as pd
 import pickle
 import urllib
@@ -194,6 +195,13 @@ def NIH_downloader_by_parts(index):
     img_path = '/content/NIH_images/images/'
     if os.path.isfile(fn):
         print("File " + fn + " already exists")
+        # Remove tar file
+        if os.path.exists(fn):
+            os.remove(fn)
+            print(fn + "Deleted.")
+        else:
+            print("Can not delete " + fn + " as it doesn't exist.")
+
         if os.path.exists(img_path):
             print("Images already upacked.")
             return img_path    #return images path
@@ -208,11 +216,7 @@ def NIH_downloader_by_parts(index):
     print("extraction finished")
     tf.close()
 
-    # Remove tar file
-    # if os.path.exists(fn):
-    #     os.remove(fn)
-    # else:
-    #     print("Can not delete " + fn + " as it doesn't exist.")
+
 
     # append all images into a list
     # for filename in glob.glob('/content/NIH_images/images/*.png'):
@@ -458,3 +462,18 @@ def split_sub_dataloaders(dataset, subset_per=1,split_per=0.7, batch_size=100, n
     dataset_sizes = {'train': len(ds_train), 'val': len(ds_val)}
 
     return (dataloaders, dataset_sizes)
+
+
+def remove_NIH_imgaes(folder):
+
+    for filename in os.listdir(folder):
+        file_path = os.path.join(folder, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print('Failed to delete %s. Reason: %s' % (file_path, e))
+
+    os.rmdir(folder)
