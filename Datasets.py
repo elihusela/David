@@ -389,7 +389,7 @@ class NIH_partial_Dataset(Dataset):
 
         :return: a sample of data as a tuple
         """
-        image = Image.open(self.img_list[index])
+        image = Image.open(img_dir + self.img_list[index])
         image = self.to_tensor(image)
 
         if (image.shape[0] > 1):
