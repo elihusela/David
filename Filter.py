@@ -10,7 +10,7 @@ import numpy as np
 from torchvision import datasets, models, transforms
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
-'
+
 
 def make_kernels(kernel_size=21, mean=0.0, sigma=1.0, device='cpu'):
 
