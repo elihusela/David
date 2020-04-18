@@ -19,8 +19,7 @@ def set_parameter_requires_grad(model, feature_extracting):
 
 
 
-def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_inception=False,TO_FILTER=True, f_block=None):
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_inception=False,TO_FILTER=True, f_block=None,device='cpu'):
     since = time.time()
 
     val_acc_history = []
