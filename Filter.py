@@ -20,7 +20,7 @@ def make_kernels(kernel_size=21, mean=0.0, sigma=1.0, device='cpu'):
 
     x, y = np.meshgrid(np.linspace(-1, 1, kernel_size), np.linspace(-1, 1, kernel_size))
     d = np.sqrt(x * x + y * y)
-    d_g = (1/(2 * np.power(sigma, 2.)) * np.sqrt(2.0 * 3.1415)) * np.exp(-np.power(y - mu, 2.) / (2 * np.power(sigma, 2.))) #1D-gaussian-func
+    d_g = (1/(2 * np.power(sigma, 2.)) * np.sqrt(2.0 * 3.1415)) * np.exp(-np.power(y - mean, 2.) / (2 * np.power(sigma, 2.))) #1D-gaussian-func
     dd_g = np.exp(-((d - mean) ** 2 / (2.0 * sigma ** 2)))  #2D-gaussian-func
 
     dd_z_g = dd_g * np.power((y-mean), 2.)   #2D-2d_Gauss*(x-mean)**2-func
