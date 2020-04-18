@@ -37,7 +37,7 @@ def initialize_model(model_name="resnet", num_classes=2, feature_extract=False, 
         """ Alexnet
         """
         model_ft = models.alexnet(pretrained=use_pretrained)
-        model_ft.conv1 = torch.nn.Conv1d(1, 64, kernel_size=(11, 11), stride=(4, 4), padding=(2, 2))  #Input grayscale
+        model_ft.features[0] = torch.nn.Conv2d(1, 64, kernel_size=(11, 11), stride=(4, 4), padding=(2, 2))  #Input grayscale
         set_parameter_requires_grad(model_ft, feature_extract)
         num_ftrs = model_ft.classifier[6].in_features
         model_ft.classifier[6] = nn.Linear(num_ftrs,num_classes)
