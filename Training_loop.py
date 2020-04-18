@@ -101,3 +101,54 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
     # load best model weights
     model.load_state_dict(best_model_wts)
     return model, val_acc_history
+
+
+
+
+
+# for feature_extract in [True,False]:
+#     for TO_FILTER in [False,True]:
+#
+#         model_ft, input_size = D_Models.initialize_model(model_name, num_classes, feature_extract, use_pretrained=True)
+#         # model_ft.features[0] = torch.nn.Conv2d(1, 64, kernel_size=(11, 11), stride=(4, 4), padding=(2, 2))  #Input grayscale
+#
+#         # Send the model to GPU
+#         model_ft = model_non_filtered.to(device)
+#
+#         # Gather the parameters to be optimized/updated in this run. If we are
+#         #  finetuning we will be updating all parameters. However, if we are
+#         #  doing feature extract method, we will only update the parameters
+#         #  that we have just initialized, i.e. the parameters with requires_grad
+#         #  is True.
+#         params_to_update_ = model_ft.parameters()
+#         print("Params to learn:")
+#         if feature_extract:
+#             params_to_update = []
+#             for name, param in model_ft.named_parameters():
+#                 if param.requires_grad == True:
+#                     params_to_update.append(param)
+#                     print("\t", name)
+#         else:
+#             for name, param in model_ft.named_parameters():
+#                 if param.requires_grad == True:
+#                     print("\t", name)
+#
+#         # Observe that all parameters are being optimized
+#         optimizer_ft = optim.SGD(params_to_update, lr=0.001, momentum=0.9)
+#
+#         # Setup the loss fxn
+#         criterion = nn.CrossEntropyLoss()
+#
+#         # Train and evaluate
+#         model_ft, hist = Training_loop.train_model(model_ft, dataloaders_dict, criterion, optimizer_ft,
+#                                                    num_epochs=num_epochs, is_inception=(model_name == "inception"),
+#                                                    device=device, TO_FILTER=TO_FILTER, f_block=F_B)
+#
+#         if (!feature_extract and !TO_FILTER):
+#             nfe_nf_hist = [h.cpu().numpy() for h in hist]
+#         elif (feature_extract and !TO_FILTER):
+#             fe_nf_hist = [h.cpu().numpy() for h in hist]
+#         elif (!feature_extract and TO_FILTER):
+#             nfe_f_hist = [h.cpu().numpy() for h in hist]
+#         elif (feature_extract and TO_FILTER):
+#             fe_f_hist = [h.cpu().numpy() for h in hist]
