@@ -1,4 +1,8 @@
 from PIL import Image
+import torch
+import torch.nn.functional as F
+import torchvision
+import torchvision.transforms.functional as TF
 from os.path import join
 from skimage.io import imread, imsave
 from torch import nn
