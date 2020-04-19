@@ -11,7 +11,7 @@ from torch.utils.data import Dataset
 from torchvision import transforms
 
 @torch.no_grad()
-def get_all_preds(model, loader):
+def get_all_preds(model, loader, device='cpu'):
     dtype = torch.FloatTensor
     all_preds = torch.tensor([])
     all_classes = torch.tensor([])
@@ -36,7 +36,7 @@ def get_all_preds(model, loader):
 
 
 
-def plot_confusion_matrix(model,loader, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues):
+def plot_confusion_matrix(model,loader, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues, device='cpu'):
 
     all_preds, all_classes = get_all_preds(model, loader)
     preds = all_preds.argmax(dim=1)
