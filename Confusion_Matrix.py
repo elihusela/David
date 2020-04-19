@@ -38,7 +38,7 @@ def get_all_preds(model, loader):
 
 def plot_confusion_matrix(model,loader, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues):
 
-    all_preds, all_classes = get_all_preds(model_ft, loader)
+    all_preds, all_classes = get_all_preds(model, loader)
     preds = all_preds.argmax(dim=1)
 
     stacked = torch.stack((all_classes, preds), dim=1)
