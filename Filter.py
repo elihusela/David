@@ -75,7 +75,7 @@ class f_block(torch.nn.Module):
 
         if (TO_PRINT):
           print("orig:")
-          plt.imshow(x[0,0,:,:],cmap = 'gray')
+          plt.imshow(x[0,0,:,:].cpu(),cmap = 'gray')
           plt.show()
 
         psy= torch.nn.functional.conv2d(input=x, weight=self.g_kernel, padding=self.padding)
@@ -83,7 +83,7 @@ class f_block(torch.nn.Module):
         if (TO_PRINT):
           print(psy.min(),psy.max())
           print("gauss:")
-          plt.imshow(psy[0,0,:,:], cmap = 'gray')
+          plt.imshow(psy[0,0,:,:].cpu(), cmap = 'gray')
           plt.show()
 
         x_psy= torch.nn.functional.conv2d(input=x, weight=self.x_g_kernel,padding=self.padding)
@@ -91,7 +91,7 @@ class f_block(torch.nn.Module):
         if (TO_PRINT):
           print(x_psy.min(),x_psy.max())
           print("x*gauss:")
-          plt.imshow(x_psy[0,0,:,:], cmap = 'gray')
+          plt.imshow(x_psy[0,0,:,:].cpu(), cmap = 'gray')
           plt.show()
 
         x = torch.div(psy, x_psy)
@@ -99,7 +99,7 @@ class f_block(torch.nn.Module):
 
         if (TO_PRINT):
           print("divided:")
-          plt.imshow(x[0,0,:,:], cmap = 'gray')
+          plt.imshow(x[0,0,:,:].cpu(), cmap = 'gray')
           plt.show()
 
         x = self.normalize_image(x)
@@ -121,7 +121,7 @@ class f_block(torch.nn.Module):
 
         if (TO_PRINT):
           print("result:")
-          plt.imshow(x[0,0,:,:], cmap = 'gray')
+          plt.imshow(x[0,0,:,:].cpu(), cmap = 'gray')
           plt.show()
 
         return x
