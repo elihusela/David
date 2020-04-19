@@ -342,7 +342,7 @@ class NIH_partial_Dataset(Dataset):
         self.class_list = {'Atelectasis': 0, 'Cardiomegaly': 1, 'Effusion': 2, 'Infiltration': 3, 'Mass': 4,
                            'Nodule': 5, 'Pneumonia': 6, 'Pneumothorax': 7, 'Consolidation': 8, 'Edema': 9,
                            'Emphysema': 10, 'Fibrosis': 11, 'Pleural_Thickening': 12, 'Hernia': 13,
-                           'No Finding': 14}
+                           'No Finding': 14,"Consolidation" : 15}
 
 
         df = pd.read_csv(csvpath)
