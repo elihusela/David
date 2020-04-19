@@ -31,7 +31,7 @@ def get_all_preds(model, loader):
             (all_preds, preds)
             ,dim=0
         )
-    return all_preds, all_classesimport torch
+    return all_preds, all_classes
 
 
 
