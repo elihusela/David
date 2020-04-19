@@ -6,6 +6,7 @@ from PIL import Image
 from os.path import join
 from skimage.io import imread, imsave
 from torch import nn
+import numpy as np
 from torch.nn.modules.linear import Linear
 from torch.utils.data import Dataset
 from torchvision import transforms
@@ -67,6 +68,7 @@ def plot_confusion_matrix(model,loader, classes, normalize=False, title='Confusi
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
+    plt.show()
 
 
 
