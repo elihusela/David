@@ -40,6 +40,7 @@ def plot_confusion_matrix(model,loader, classes, normalize=False, title='Confusi
 
     all_preds, all_classes = get_all_preds(model, loader)
     preds = all_preds.argmax(dim=1)
+    preds = preds.type(torch.FloatTensor)
 
     stacked = torch.stack((all_classes, preds), dim=1)
     cm = confusion_matrix(all_classes, preds)
