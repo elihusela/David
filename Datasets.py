@@ -330,7 +330,7 @@ class NIH_Dataset(Dataset):
 
 
 class NIH_partial_Dataset(Dataset):
-    def __init__(self, img_dir, csvpath='/content/David/Data_Entry_2017.csv', transform=None):
+    def __init__(self, img_dir, csvpath='/content/David/Data_Entry_2017.csv', transform=None, ONLY_YN=False):
         """
         Initialize data set as a list of IDs corresponding to each item of data set
 
@@ -354,6 +354,7 @@ class NIH_partial_Dataset(Dataset):
         self.transform = transform
         self.to_tensor = transforms.ToTensor()
         self.to_pil = transforms.ToPILImage()
+        self.ONLY_YN = ONLY_YN
 
 
         for (dirpath, dirnames, filenames) in os.walk(img_dir):
@@ -370,6 +371,13 @@ class NIH_partial_Dataset(Dataset):
             image_class_label = image_class_label.split('|')[0]
 
         img_cl = self.class_list[image_class_label]
+
+        if (self.ONLY_YN):
+            if (image_class_label == 'No Finding'):
+                img_cl = 0
+            else:
+                img_cl = 1
+
         return img_cl
 
     def __len__(self):
@@ -397,6 +405,7 @@ class NIH_partial_Dataset(Dataset):
 
         if self.transform is not None:
             image = self.transform(image)
+
 
         sample = (image, self.get_image_class(self.img_list[index]))
 
