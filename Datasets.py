@@ -266,7 +266,6 @@ class NIH_Dataset(Dataset):
         self.csvpath = csvpath
         self.transform = transform
         self.data_aug = data_aug
-        self.img_list = []
 
         self.pathologies = ["Atelectasis", "Consolidation", "Infiltration",
                  "Pneumothorax", "Edema", "Emphysema", "Fibrosis",

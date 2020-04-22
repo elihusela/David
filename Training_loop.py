@@ -23,6 +23,7 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
     since = time.time()
 
     val_acc_history = []
+    loss_history = []
 
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
@@ -83,6 +84,7 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
             epoch_loss = running_loss / len(dataloaders[phase].dataset)
             epoch_acc = running_corrects.double() / len(dataloaders[phase].dataset)
 
+            loss_history.append(epoch_loss)
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(phase, epoch_loss, epoch_acc))
 
             # deep copy the model
@@ -100,7 +102,7 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
 
     # load best model weights
     model.load_state_dict(best_model_wts)
-    return model, val_acc_history
+    return model, val_acc_history, loss_history
 
 
 

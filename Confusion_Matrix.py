@@ -16,6 +16,7 @@ def get_all_preds(model, loader, device='cpu'):
     dtype = torch.FloatTensor
     all_preds = torch.tensor([])
     all_classes = torch.tensor([])
+    model = model.to(device)
     for batch in loader:
         images, labels = batch
         images = images.to(device)
