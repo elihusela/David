@@ -256,7 +256,7 @@ class NIH_Dataset(Dataset):
                  data_aug=None,
                  nrows=None,
                  seed=0,
-                 pure_labels=False,
+                 pure_labels=True,
                  unique_patients=True):
 
         super(NIH_Dataset, self).__init__()
@@ -266,11 +266,12 @@ class NIH_Dataset(Dataset):
         self.csvpath = csvpath
         self.transform = transform
         self.data_aug = data_aug
+        self.img_list = []
 
         self.pathologies = ["Atelectasis", "Consolidation", "Infiltration",
-                            "Pneumothorax", "Edema", "Emphysema", "Fibrosis",
-                            "Effusion", "Pneumonia", "Pleural_Thickening",
-                            "Cardiomegaly", "Nodule", "Mass", "Hernia"]
+                 "Pneumothorax", "Edema", "Emphysema", "Fibrosis",
+                 "Effusion", "Pneumonia", "Pleural_Thickening",
+                 "Cardiomegaly", "Nodule", "Mass", "Hernia", 'No Finding']
 
         self.pathologies = sorted(self.pathologies)
 
@@ -281,6 +282,10 @@ class NIH_Dataset(Dataset):
 
         # Remove images with view position other than PA
         self.csv = self.csv[self.csv['View Position'] == 'PA']
+
+        for (dirpath, dirnames, filenames) in os.walk(img_dir):
+            self.img_list.extend(filenames)
+            break
 
         # Remove multi-finding images.
         if pure_labels:
@@ -302,7 +307,7 @@ class NIH_Dataset(Dataset):
         return self.__class__.__name__ + " num_samples={}".format(len(self))
 
     def __len__(self):
-        return len(self.labels)
+        return len(self.img_list)
 
     def __getitem__(self, idx):
         imgid = self.csv['Image Index'].iloc[idx]
