@@ -283,10 +283,6 @@ class NIH_Dataset(Dataset):
         # Remove images with view position other than PA
         self.csv = self.csv[self.csv['View Position'] == 'PA']
 
-        for (dirpath, dirnames, filenames) in os.walk(img_dir):
-            self.img_list.extend(filenames)
-            break
-
         # Remove multi-finding images.
         if pure_labels:
             self.csv = self.csv[~self.csv["Finding Labels"].str.contains("\|")]
