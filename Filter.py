@@ -50,12 +50,13 @@ def make_kernels(kernel_size=21, mean=0.0, sigma=1.0, device='cpu'):
 
 
 class f_block(torch.nn.Module):
-    def __init__(self, kernels, FILTER_TYPE, MASK_P, device, transforms=None):
+    def __init__(self, kernels, FILTER_TYPE, MASK_P, device, transform):
         super(f_block, self).__init__()
         self.MASK_P = MASK_P
         self.FILTER_TYPE = FILTER_TYPE
         self.dim_change = None
         self.device = device
+        self.transform = transform
         self.g_kernel = kernels[0]
         self.x_g_kernel = kernels[1]
         self.padding = (kernels[0].shape[3] )//2   ##keep kernel size odd!
@@ -129,8 +130,10 @@ class f_block(torch.nn.Module):
             x = torch.pow(x ,2)
             x = copy * x
 
-        if transforms != None :
-            x = transforms(x)
+        if self.transform != None :
+            x = self.transform(x[0,:,:,:].to('cpu'))
+            x = x.unsqueeze(0)
+            x = x.to(self.device)
 
         if (TO_PRINT):
           print("result:")
