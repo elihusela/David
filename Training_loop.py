@@ -23,7 +23,7 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
     since = time.time()
 
     val_acc_history = []
-    loss_history = []
+    loss_history = [[],[]]
 
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
@@ -76,6 +76,8 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
                     if phase == 'train':
                         loss.backward()
                         optimizer.step()
+=
+
 
                 # statistics
                 running_loss += loss.item() * inputs.size(0)
@@ -84,8 +86,12 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
             epoch_loss = running_loss / len(dataloaders[phase].dataset)
             epoch_acc = running_corrects.double() / len(dataloaders[phase].dataset)
 
-            loss_history.append(epoch_loss)
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(phase, epoch_loss, epoch_acc))
+
+            if phase == 'train':
+                loss_history[0].append(epoch_loss)
+            elif phase == 'val':
+                loss_history[1].append(epoch_loss)
 
             # deep copy the model
             if phase == 'val' and epoch_acc > best_acc:
@@ -93,8 +99,6 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
                 best_model_wts = copy.deepcopy(model.state_dict())
             if phase == 'val':
                 val_acc_history.append(epoch_acc)
-
-        print()
 
     time_elapsed = time.time() - since
     print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
