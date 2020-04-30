@@ -19,11 +19,21 @@ import matplotlib.pyplot as plt
 def make_kernels(kernel_size=21, mean=0.0, sigma=1.0, device='cpu'):
 
     x, y = np.meshgrid(np.linspace(-1, 1, kernel_size), np.linspace(-1, 1, kernel_size))
+    print(x,y)
     d = np.sqrt(x * x + y * y)
+    print(d)
     d_g = (1/(2 * np.power(sigma, 2.)) * np.sqrt(2.0 * 3.1415)) * np.exp(-np.power(y - mean, 2.) / (2 * np.power(sigma, 2.))) #1D-gaussian-func
+    plt.imshow(d_g)
+    plt.show()
     dd_g = np.exp(-((d - mean) ** 2 / (2.0 * sigma ** 2)))  #2D-gaussian-func
 
-    dd_z_g = dd_g * np.power((y-mean), 2.)   #2D-2d_Gauss*(x-mean)**2-func
+    plt.imshow(d_g)
+    plt.show()
+
+    dd_z_g = dd_g * np.power((d-mean), 2.)   #2D-2d_Gauss*(x-mean)**2-func
+
+    plt.imshow(d_g)
+    plt.show()
 
     t_dd_g = torch.from_numpy(dd_g)
     t_dd_z_g = torch.from_numpy(dd_z_g)
@@ -40,7 +50,7 @@ def make_kernels(kernel_size=21, mean=0.0, sigma=1.0, device='cpu'):
 
 
 class f_block(torch.nn.Module):
-    def __init__(self, kernels, FILTER_TYPE, MASK_P, device):
+    def __init__(self, kernels, FILTER_TYPE, MASK_P, device, transforms=None):
         super(f_block, self).__init__()
         self.MASK_P = MASK_P
         self.FILTER_TYPE = FILTER_TYPE
@@ -118,6 +128,9 @@ class f_block(torch.nn.Module):
             x = torch.exp(-x)
             x = torch.pow(x ,2)
             x = copy * x
+
+        if transforms != None :
+            x = transforms(x)
 
         if (TO_PRINT):
           print("result:")
