@@ -76,7 +76,6 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
                     if phase == 'train':
                         loss.backward()
                         optimizer.step()
-=
 
 
                 # statistics
