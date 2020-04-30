@@ -59,9 +59,9 @@ class f_block(torch.nn.Module):
         self.crop_num = crop_num
         self.g_kernel = kernels[0]
         self.x_g_kernel = kernels[1]
-        self.padding = (kernels[0].shape[3] )//2   ##keep kernel size odd!
+        self.padding = (kernels[0].shape[3]) // 2  ##keep kernel size odd!
 
-    def normalize_image(self,sample):
+    def normalize_image(self, sample):
         im_min = sample.min()
         im_max = sample.max()
         sub = im_max - im_min
@@ -69,75 +69,86 @@ class f_block(torch.nn.Module):
 
         return res
 
-
-    def apply_mask(self,x, mask_percent, device):
-      k = 1 + round(.01 * float(mask_percent) * (x.numel() - 1))
-      per_val = x.view(-1).kthvalue(k).values.item()
-      ones = torch.ones(x.shape[0] ,x.shape[1], x.shape[2], x.shape[3])
-      zeros = torch.zeros(x.shape[0] ,x.shape[1], x.shape[2], x.shape[3])
-      res = torch.where(x > per_val, ones.to(device), zeros.to(device))
-      # res = res *x
-      return res
-
+    def apply_mask(self, x, mask_percent, device):
+        k = 1 + round(.01 * float(mask_percent) * (x.numel() - 1))
+        per_val = x.view(-1).kthvalue(k).values.item()
+        ones = torch.ones(x.shape[0], x.shape[1], x.shape[2], x.shape[3])
+        zeros = torch.zeros(x.shape[0], x.shape[1], x.shape[2], x.shape[3])
+        res = torch.where(x > per_val, ones.to(device), zeros.to(device))
+        # res = res *x
+        return res
 
     def forward(self, x, TO_PRINT=0):
 
         copy = x.clone()
 
         if (TO_PRINT):
-          print("orig:")
-          plt.imshow(x[0,0,:,:].cpu(),cmap = 'gray')
-          plt.show()
+            print("orig:")
+            plt.imshow(x[0, 0, :, :].cpu(), cmap='gray')
+            plt.show()
 
-        psy= torch.nn.functional.conv2d(input=x, weight=self.g_kernel, padding=self.padding)
+        psy = torch.nn.functional.conv2d(input=x, weight=self.g_kernel, padding=self.padding)
         psy[torch.isnan(psy)] = 0
+        psy = self.normalize_image(psy)
         if (TO_PRINT):
-          print(psy.min(),psy.max())
-          print("gauss:")
-          plt.imshow(psy[0,0,:,:].cpu(), cmap = 'gray')
-          plt.show()
+            print(psy.min(), psy.max())
+            print("gauss:")
+            plt.imshow(psy[0, 0, :, :].cpu(), cmap='gray')
+            plt.show()
 
-        x_psy= torch.nn.functional.conv2d(input=x, weight=self.x_g_kernel,padding=self.padding)
+        x_psy = torch.nn.functional.conv2d(input=x, weight=self.x_g_kernel, padding=self.padding)
         x_psy[torch.isnan(x_psy)] = 0
+        x_psy = self.normalize_image(x_psy)
         if (TO_PRINT):
-          print(x_psy.min(),x_psy.max())
-          print("x*gauss:")
-          plt.imshow(x_psy[0,0,:,:].cpu(), cmap = 'gray')
-          plt.show()
+            print(x_psy.min(), x_psy.max())
+            print("x*gauss:")
+            plt.imshow(x_psy[0, 0, :, :].cpu(), cmap='gray')
+            plt.show()
 
         x = torch.div(psy, x_psy)
         x[torch.isnan(x)] = 0
 
         if (TO_PRINT):
-          print("divided:")
-          plt.imshow(x[0,0,:,:].cpu(), cmap = 'gray')
-          plt.show()
+            print("divided:")
+            plt.imshow(x[0, 0, :, :].cpu(), cmap='gray')
+            plt.show()
 
-        x = self.normalize_image(x)
-
-        if (self.FILTER_TYPE =="V"):
-            x = self.apply_mask(x, self.MASK_P, device)
+        if (self.FILTER_TYPE == "V"):
+            x = self.apply_mask(x, self.MASK_P, self.device)
 
         if (self.FILTER_TYPE == "S"):
             x = torch.exp(-x)
 
         if (self.FILTER_TYPE == "S_psy"):
             x = torch.exp(-x)
+            if (TO_PRINT):
+                print("S:")
+                plt.imshow(x[0, 0, :, :].cpu(), cmap='gray')
+                plt.show()
             x = psy * x
 
         if (self.FILTER_TYPE == "S_img"):
             x = torch.exp(-x)
-            x = torch.pow(x ,2)
+            if (TO_PRINT):
+                print("S:")
+                plt.imshow(x[0, 0, :, :].cpu(), cmap='gray')
+                plt.show()
+            x = torch.pow(x, 2)
+            if (TO_PRINT):
+                print("S^2:")
+                plt.imshow(x[0, 0, :, :].cpu(), cmap='gray')
+                plt.show()
             x = copy * x
 
-        if self.crop_num > 0 :
+        if self.crop_num > 0:
             BS, CH, H, W = x.shape
             x = x[:, :, self.crop_num:H - self.crop_num, self.crop_num:W - self.crop_num]
 
+        x = self.normalize_image(x)
+
         if (TO_PRINT):
-          print("result:")
-          plt.imshow(x[0,0,:,:].cpu(), cmap = 'gray')
-          plt.show()
+            print("result:")
+            plt.imshow(x[0, 0, :, :].cpu(), cmap='gray')
+            plt.show()
 
         return x
-
