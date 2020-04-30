@@ -19,7 +19,7 @@ def set_parameter_requires_grad(model, feature_extracting):
 
 
 
-def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_inception=False,TO_FILTER=True, f_block=None,device='cpu'):
+def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_inception=False,TO_FILTER=True, f_block=None,device='cpu', crop_num=0):
     since = time.time()
 
     val_acc_history = []
@@ -49,6 +49,12 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
 
                 if (TO_FILTER):
                   inputs = f_block(inputs,0)
+
+                if crop_num > 0:
+                    BS, CH, H, W = inputs.shape
+                    inputs = inputs[:, :, crop_num:H - crop_num, crop_num:W - crop_num]
+                    
+
 
                 # zero the parameter gradients
                 optimizer.zero_grad()
