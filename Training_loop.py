@@ -19,7 +19,7 @@ def set_parameter_requires_grad(model, feature_extracting):
 
 
 
-def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_inception=False,TO_FILTER=True, f_block=None,device='cpu', crop_num=0):
+def train_model(model, dataloaders, criterion, optimizer, scheduler, num_epochs=25, is_inception=False,TO_FILTER=True, f_block=None,device='cpu', crop_num=0):
     since = time.time()
 
     val_acc_history = []
