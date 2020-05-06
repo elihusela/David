@@ -53,7 +53,7 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
                 if crop_num > 0:
                     BS, CH, H, W = inputs.shape
                     inputs = inputs[:, :, crop_num:H - crop_num, crop_num:W - crop_num]
-                    
+
 
 
                 # zero the parameter gradients
