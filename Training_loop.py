@@ -47,17 +47,15 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
                 inputs = inputs.to(device)
                 labels = labels.to(device)
 
+                # zero the parameter gradients
+                optimizer.zero_grad()
+
                 if (TO_FILTER):
                   inputs = f_block(inputs,0)
 
                 if crop_num > 0:
                     BS, CH, H, W = inputs.shape
                     inputs = inputs[:, :, crop_num:H - crop_num, crop_num:W - crop_num]
-
-
-
-                # zero the parameter gradients
-                optimizer.zero_grad()
 
                 # forward
                 # track history if only in train
@@ -74,9 +72,8 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
                         loss = loss1 + 0.4*loss2
                     else:
                         outputs = model(inputs)
+                        _, preds = torch.max(outputs, 1)
                         loss = criterion(outputs, labels)
-
-                    _, preds = torch.max(outputs, 1)
 
                     # backward + optimize only if in training phase
                     if phase == 'train':
@@ -94,6 +91,7 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(phase, epoch_loss, epoch_acc))
 
             if phase == 'train':
+                scheduler.step()
                 loss_history[0].append(epoch_loss)
             elif phase == 'val':
                 loss_history[1].append(epoch_loss)
