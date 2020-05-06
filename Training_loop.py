@@ -44,10 +44,10 @@ def train_model(model, dataloaders, criterion, optimizer, scheduler, num_epochs=
 
             # Iterate over data.
             for inputs, labels in dataloaders[phase]:
+                inputs = np.repeat(inputs, 3, axis=1) #duplicate grayscale image to 3 channels
                 inputs = inputs.to(device)
                 labels = labels.to(device)
 
-                inputs = np.repeat(inputs, 3, axis=1) #duplicate grayscale image to 3 channels
 
                 # zero the parameter gradients
                 optimizer.zero_grad()
