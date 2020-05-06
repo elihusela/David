@@ -16,23 +16,22 @@ import torch.nn.functional as F
 import matplotlib.pyplot as plt
 
 
+
 def make_kernels(kernel_size=21, mean=0.0, sigma=1.0, device='cpu'):
 
     x, y = np.meshgrid(np.linspace(-1, 1, kernel_size), np.linspace(-1, 1, kernel_size))
-    print(x,y)
     d = np.sqrt(x * x + y * y)
-    print(d)
     d_g = (1/(2 * np.power(sigma, 2.)) * np.sqrt(2.0 * 3.1415)) * np.exp(-np.power(y - mean, 2.) / (2 * np.power(sigma, 2.))) #1D-gaussian-func
-    plt.imshow(d_g)
+    plt.imshow(d_g, cmap = 'gray')
     plt.show()
     dd_g = np.exp(-((d - mean) ** 2 / (2.0 * sigma ** 2)))  #2D-gaussian-func
 
-    plt.imshow(d_g)
+    plt.imshow(dd_g, cmap = 'gray')
     plt.show()
 
     dd_z_g = dd_g * np.power((d-mean), 2.)   #2D-2d_Gauss*(x-mean)**2-func
 
-    plt.imshow(d_g)
+    plt.imshow(dd_z_g, cmap='gray')
     plt.show()
 
     t_dd_g = torch.from_numpy(dd_g)
@@ -40,10 +39,12 @@ def make_kernels(kernel_size=21, mean=0.0, sigma=1.0, device='cpu'):
 
     t_dd_g = torch.unsqueeze(t_dd_g, 0)
     t_dd_g = torch.unsqueeze(t_dd_g, 0)
+    t_dd_g = np.repeat(t_dd_g, 3, axis=1)  # duplicate grayscale image to 3 channels
     t_dd_g = t_dd_g.to(device)
 
     t_dd_z_g = torch.unsqueeze(t_dd_z_g, 0)
     t_dd_z_g = torch.unsqueeze(t_dd_z_g, 0)
+    t_dd_z_g = np.repeat(t_dd_z_g, 3, axis=1)  # duplicate grayscale image to 3 channels
     t_dd_z_g = t_dd_z_g.to(device)
 
     return (t_dd_g.float(), t_dd_z_g.float())

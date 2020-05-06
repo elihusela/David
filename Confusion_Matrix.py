@@ -19,6 +19,7 @@ def get_all_preds(model, loader, device='cpu'):
     model = model.to(device)
     for batch in loader:
         images, labels = batch
+        images = np.repeat(images, 3, axis=1)  # duplicate grayscale image to 3 channels
         images = images.to(device)
         labels = labels.type(dtype)
 
