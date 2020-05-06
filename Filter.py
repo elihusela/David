@@ -40,11 +40,13 @@ def make_kernels(kernel_size=21, mean=0.0, sigma=1.0, device='cpu'):
     t_dd_g = torch.unsqueeze(t_dd_g, 0)
     t_dd_g = torch.unsqueeze(t_dd_g, 0)
     t_dd_g = np.repeat(t_dd_g, 3, axis=1)  # duplicate grayscale image to 3 channels
+    t_dd_g = np.repeat(t_dd_g, 3, axis=0)  # duplicate grayscale image to 3 channels
     t_dd_g = t_dd_g.to(device)
 
     t_dd_z_g = torch.unsqueeze(t_dd_z_g, 0)
     t_dd_z_g = torch.unsqueeze(t_dd_z_g, 0)
     t_dd_z_g = np.repeat(t_dd_z_g, 3, axis=1)  # duplicate grayscale image to 3 channels
+    t_dd_z_g = np.repeat(t_dd_z_g, 3, axis=0)  # duplicate grayscale image to 3 channels
     t_dd_z_g = t_dd_z_g.to(device)
 
     return (t_dd_g.float(), t_dd_z_g.float())
