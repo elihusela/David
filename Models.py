@@ -92,3 +92,6 @@ def initialize_model(model_name="resnet", num_classes=2, feature_extract=False, 
     print(model_ft)
     return model_ft, input_size
 
+
+
+

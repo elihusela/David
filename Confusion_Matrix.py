@@ -73,7 +73,30 @@ def plot_confusion_matrix(model,loader, classes, normalize=False, title='Confusi
     plt.show()
 
 
+def visualize_model(model, num_images=6,dl=None):
+    was_training = model.training
+    model.eval()
+    images_so_far = 0
+    fig = plt.figure()
 
+    with torch.no_grad():
+        for i, (inputs, labels) in enumerate(dl['val']):
+            inputs = np.repeat(inputs, 3, axis=1) #duplicate grayscale image to 3 channels
+            inputs = inputs.to(device)
+            labels = labels.to(device)
 
-# plt.figure(figsize=(len(names),len(names)))
-# plot_confusion_matrix(cm, names)
+            outputs = model(inputs)
+            _, preds = torch.max(outputs, 1)
+
+            for j in range(inputs.size()[0]):
+                images_so_far += 1
+                ax = plt.subplot(num_images//2, 2, images_so_far)
+                ax.axis('off')
+                ax.set_title('predicted: {}'.format(names[preds[j]]))
+                plt.imshow(inputs.cpu().data[j][0,:,:], cmap='gray')
+                plt.show()
+
+                if images_so_far == num_images:
+                    model.train(mode=was_training)
+                    return
+        model.train(mode=was_training)
