@@ -573,15 +573,17 @@ def remove_NIH_images(folder):
 
 
 def sort_NIH_by_classes(class_list, path, csv_path):
-    df = pd.read_csv(loc_path + '\Data_Entry_2017.csv')
+    df = pd.read_csv(csv_path)
     img_names = df['Image Index'].values
     img_classes = df['Finding Labels'].values
 
     img_list = os.listdir(path)
     os.mkdir(path + 'doubles')
 
+    b_slash = '//'
+
     for name in class_list:
-        os.mkdir(path + '\\' + name)
+        os.mkdir(path + name)
 
     for name in img_list:
         idx = np.where(img_names == name)[0][0]
@@ -592,8 +594,9 @@ def sort_NIH_by_classes(class_list, path, csv_path):
             img_class = 'doubles'
 
         path_to_curr_file = path + name
-        path_to_dest = path + '\\' + img_class + '\\' + name
-
+        path_to_dest = path + img_class + b_slash + name
         shutil.move(path_to_curr_file, path_to_dest)
-        
+
+    return path
+
 
