@@ -1,2 +1,0 @@
-no filter - Best val Acc: 0.452931
-filter - Best val Acc: 0.428952

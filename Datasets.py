@@ -570,3 +570,30 @@ def remove_NIH_images(folder):
             print('Failed to delete %s. Reason: %s' % (file_path, e))
 
     os.rmdir(folder)
+
+
+def sort_NIH_by_classes(class_list, path, csv_path):
+    df = pd.read_csv(loc_path + '\Data_Entry_2017.csv')
+    img_names = df['Image Index'].values
+    img_classes = df['Finding Labels'].values
+
+    img_list = os.listdir(path)
+    os.mkdir(path + 'doubles')
+
+    for name in class_list:
+        os.mkdir(path + '\\' + name)
+
+    for name in img_list:
+        idx = np.where(img_names == name)[0][0]
+
+        img_class = img_classes[idx]
+
+        if ("|" in img_class):
+            img_class = 'doubles'
+
+        path_to_curr_file = path + name
+        path_to_dest = path + '\\' + img_class + '\\' + name
+
+        shutil.move(path_to_curr_file, path_to_dest)
+        
+
