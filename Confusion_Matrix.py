@@ -73,7 +73,7 @@ def plot_confusion_matrix(model,loader, classes, normalize=False, title='Confusi
     plt.show()
 
 
-def visualize_model(model, num_images=6,dl=None):
+def visualize_model(model, classes, num_images=6,dl=None, device='cpu'):
     was_training = model.training
     model.eval()
     images_so_far = 0
@@ -92,7 +92,7 @@ def visualize_model(model, num_images=6,dl=None):
                 images_so_far += 1
                 ax = plt.subplot(num_images//2, 2, images_so_far)
                 ax.axis('off')
-                ax.set_title('predicted: {}'.format(names[preds[j]]))
+                ax.set_title('predicted: {}'.format(classes[preds[j]]))
                 plt.imshow(inputs.cpu().data[j][0,:,:], cmap='gray')
                 plt.show()
 
