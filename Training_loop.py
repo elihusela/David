@@ -19,7 +19,7 @@ def set_parameter_requires_grad(model, feature_extracting):
 
 
 
-def train_model(model, dataloaders, criterion, optimizer, scheduler, num_epochs=25, is_inception=False,TO_FILTER=True, f_block=None,device='cpu', crop_num=0):
+def train_model(model, dataloaders, criterion, optimizer, scheduler, num_epochs=25, is_inception=False,TO_FILTER=True, f_block=None,device='cpu', crop_num=0, grayscale=False):
     since = time.time()
 
     val_acc_history = []
@@ -44,7 +44,10 @@ def train_model(model, dataloaders, criterion, optimizer, scheduler, num_epochs=
 
             # Iterate over data.
             for inputs, labels in dataloaders[phase]:
-                inputs = np.repeat(inputs, 3, axis=1) #duplicate grayscale image to 3 channels
+
+                if grayscale == True:
+                    inputs = np.repeat(inputs, 3, axis=1)  # duplicate grayscale image to 3 channels
+                    
                 inputs = inputs.to(device)
                 labels = labels.to(device)
 
