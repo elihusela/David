@@ -12,14 +12,17 @@ from torch.utils.data import Dataset
 from torchvision import transforms
 
 @torch.no_grad()
-def get_all_preds(model, loader, device='cpu'):
+def get_all_preds(model, loader, device='cpu', grayscale = False):
     dtype = torch.FloatTensor
     all_preds = torch.tensor([])
     all_classes = torch.tensor([])
     model = model.to(device)
     for batch in loader:
         images, labels = batch
-        images = np.repeat(images, 3, axis=1)  # duplicate grayscale image to 3 channels
+
+        if grayscale == True:
+            images = np.repeat(images, 3, axis=1)  # duplicate grayscale image to 3 channels
+
         images = images.to(device)
         labels = labels.type(dtype)
 
@@ -41,7 +44,7 @@ def get_all_preds(model, loader, device='cpu'):
 
 def plot_confusion_matrix(model,loader, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues, device='cpu', save_path='/content/cm.jpg'):
 
-    all_preds, all_classes = get_all_preds(model, loader)
+    all_preds, all_classes = get_all_preds(model, loader, grayscale = grayscale)
     preds = all_preds.argmax(dim=1)
     preds = preds.type(torch.FloatTensor)
 
@@ -73,7 +76,7 @@ def plot_confusion_matrix(model,loader, classes, normalize=False, title='Confusi
     plt.show()
 
 
-def visualize_model(model, classes, num_images=6,dl=None, device='cpu'):
+def visualize_model(model, classes, num_images=6,dl=None, device='cpu', grayscale = False):
     was_training = model.training
     model.eval()
     images_so_far = 0
@@ -81,7 +84,10 @@ def visualize_model(model, classes, num_images=6,dl=None, device='cpu'):
 
     with torch.no_grad():
         for i, (inputs, labels) in enumerate(dl['val']):
-            inputs = np.repeat(inputs, 3, axis=1) #duplicate grayscale image to 3 channels
+
+            if grayscale == True:
+                inputs = np.repeat(inputs, 3, axis=1)  # duplicate grayscale image to 3 channels
+
             inputs = inputs.to(device)
             labels = labels.to(device)
 
