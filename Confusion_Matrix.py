@@ -42,7 +42,7 @@ def get_all_preds(model, loader, device='cpu', grayscale = False):
 
 
 
-def plot_confusion_matrix(model,loader, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues, device='cpu', save_path='/content/cm.jpg'):
+def plot_confusion_matrix(model,loader, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues, device='cpu', save_path='/content/cm.jpg', grayscale = False):
 
     all_preds, all_classes = get_all_preds(model, loader, grayscale = grayscale)
     preds = all_preds.argmax(dim=1)
