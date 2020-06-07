@@ -90,9 +90,10 @@ class f_block(torch.nn.Module):
     def apply_Otsus(self, x, device):
         entropy_res = torch.zeros(x.shape)  # placeholders for results
         binary_res = torch.zeros(x.shape)
-
+        x = self.normalize_image(x)
         for i in [0, 1, 2]:  # RGB
-            x_one_channel = x[:, i, :, :]
+            x = x.cpu()
+            x_one_channel = x[:, 0, :, :]
             x_one_channel = x_one_channel.numpy()  # convert to numpy array
             x_one_channel = x_one_channel[0, :, :]
             entropy_img = entropy(x_one_channel, disk(10))  # entropy filter
@@ -105,7 +106,7 @@ class f_block(torch.nn.Module):
             entropy_res[0, i, :, :] = entropy_img  # build back RGB images
             binary_res[0, i, :, :] = binary
 
-        return (entropy_res, binary_res)
+        return (entropy_res.to(device), binary_res.to(device))
 
     def forward(self, x, TO_PRINT=0):
 
@@ -136,6 +137,7 @@ class f_block(torch.nn.Module):
 
         x = torch.div(psy, x_psy)
         x[torch.isnan(x)] = 0
+        x[torch.isinf(x)] = 1
 
         if (TO_PRINT):
             print("divided:")
