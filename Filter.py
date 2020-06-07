@@ -81,6 +81,26 @@ class f_block(torch.nn.Module):
         # res = res *x
         return res
 
+    def apply_Otsus(self, x, device):
+        entropy_res = torch.zeros(x.shape)  # placeholders for results
+        binary_res = torch.zeros(x.shape)
+
+        for i in [0, 1, 2]:  # RGB
+            x_one_channel = img[:, i, :, :]
+            x_one_channel = x_one_channel.numpy()  # convert to numpy array
+            x_one_channel = x_one_channel[0, :, :]
+            entropy_img = entropy(x_one_channel, disk(10))  # entropy filter
+            thresh = threshold_otsu(entropy_img)
+            binary = entropy_img <= thresh
+
+            entropy_img = torch.from_numpy(entropy_img)  # return to tensor
+            binary = torch.from_numpy(binary)
+
+            entropy_res[0, i, :, :] = entropy_img  # build back RGB images
+            binary_res[0, i, :, :] = binary
+
+        return (entropy_res, binary_res)
+
     def forward(self, x, TO_PRINT=0):
 
         copy = x.clone()
@@ -116,8 +136,13 @@ class f_block(torch.nn.Module):
             plt.imshow(x[0, 0, :, :].cpu(), cmap='gray')
             plt.show()
 
+
         if (self.FILTER_TYPE == "V"):
-            x = self.apply_mask(x, self.MASK_P, self.device)
+            (masked_env, masked_bin) = self.apply_Otsus(x, self.device)
+            if (self.MASK_P == 0) :
+                x = masked_env
+            else:
+                x = masked_bin
 
         if (self.FILTER_TYPE == "S"):
             x = torch.exp(-x)
