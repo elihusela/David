@@ -15,6 +15,12 @@ from torchvision import datasets, models, transforms
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 
+from skimage.filters.rank import entropy
+from skimage.morphology import disk
+from skimage.filters import threshold_otsu
+from skimage import io
+import skimage
+
 
 
 def make_kernels(kernel_size=21, mean=0.0, sigma=1.0, device='cpu'):
