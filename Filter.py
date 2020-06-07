@@ -92,7 +92,7 @@ class f_block(torch.nn.Module):
         binary_res = torch.zeros(x.shape)
 
         for i in [0, 1, 2]:  # RGB
-            x_one_channel = img[:, i, :, :]
+            x_one_channel = x[:, i, :, :]
             x_one_channel = x_one_channel.numpy()  # convert to numpy array
             x_one_channel = x_one_channel[0, :, :]
             entropy_img = entropy(x_one_channel, disk(10))  # entropy filter
