@@ -145,12 +145,23 @@ class f_block(torch.nn.Module):
             plt.show()
 
 
+
         if (self.FILTER_TYPE == "V"):
-            (masked_env, masked_bin) = self.apply_Otsus(x, self.device)
-            if (self.MASK_P == 0) :
-                x = masked_env
-            else:
-                x = masked_bin
+          while True:
+            try:
+              (masked_env, masked_bin) = self.apply_Otsus(x, self.device)
+              break
+            except ValueError:
+              print("fault!")
+              return x
+              #print(x)
+              #plt.imshow(copy[0, 0, :, :].cpu(), cmap='gray')
+              #plt.show()
+
+          if (self.MASK_P == 0) :
+              x = masked_env
+          else:
+              x = masked_bin
 
         if (self.FILTER_TYPE == "S"):
             x = torch.exp(-x)
